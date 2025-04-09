@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     socklen_t addr_len = sizeof(address);
     char buffer[BUFFER_SIZE];
     int bytes_read;
-    time_t last_accessed;
+    time_t last_accessed = 0;
 
     // Create a TCP socket
     server_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -103,20 +103,18 @@ int main(int argc, char *argv[]) {
         buffer[bytes_read] = '\0'; // null-terminate the received data
         printf("Received: %s\n", buffer); // print for debugging
         
-        // first check if the  
-        if (last_accessed) {
-          time_t current_time = time(NULL);
-          if (difftime(current_time, last_accessed) > TIMER_LENGTH) {
-            if(strcmp(buffer, "Who are you?\n") == 0) {
-              char bssid[IW_ESSID_MAX_SIZE + 1] = {0};
-              get_bssid(bssid, sizeof(bssid));
-              // so as to easily format a string to send to client          
+          if(strcmp(buffer, "Who are you?\n") == 0) {
+            char bssid[IW_ESSID_MAX_SIZE + 1] = {0};
+            get_bssid(bssid, sizeof(bssid));
+            time_t current_time = time(NULL);
+            if (difftime(current_time, last_accessed) > TIMER_LENGTH) {
               char response[256];
+              // so as to easily format a string to send to client          
               snprintf(response, sizeof(response), "%s %s\n", argv[1], bssid);
               write(client_fd, response, strlen(response));
+              last_accessed = time(NULL);
             }
           }
-        }
 
       }
 
