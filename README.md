@@ -7,3 +7,7 @@ so when we create a client script we'll need to throw both functionality in toge
 right now. Everything works from the server side except the 15 minute timer for when you are found - it should only take 5
 or so more minutes. I guess that means at the time of me writing this its technically broken since the timer is only 
 half-implemented. I'll be in class on Thursday (tomorrow) and we can get working on the rest of this thing! 
+
+## Dependencies 
+
+This program requires libcurl in order to make HTTPS requests. Make sure the `libcurl` and `libcurl-devel` libraries are installed. 
