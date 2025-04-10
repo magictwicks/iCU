@@ -19,7 +19,6 @@ void get_bssid(char *bssid_buffer, size_t buffer_size) {
     FILE *fp;
     char line[512];
 
-    // Adjust "wlan0" to your actual wireless interface if necessary
     fp = popen("iw dev wlp0s20f3 link", "r");
     if (fp == NULL) {
         perror("popen");
@@ -27,10 +26,8 @@ void get_bssid(char *bssid_buffer, size_t buffer_size) {
         return;
     }
 
-    // Read line-by-line
     while (fgets(line, sizeof(line), fp) != NULL) {
         if (strstr(line, "Connected to") != NULL) {
-            // Example: "Connected to 12:34:56:78:9A:BC (on wlan0)"
             char *start = strstr(line, "Connected to ");
             if (start != NULL) {
                 start += strlen("Connected to ");
