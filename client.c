@@ -12,6 +12,7 @@
 */
 #define SEARCH_PORT 28900
 #define HEADER_SKIP_MAGIC 14
+#define NETWORK_INTERFACE "eth0"
 
 /*
  * Helper Methods
@@ -42,7 +43,7 @@ void seek() {
     pcap_t *handle;
     char errbuf[PCAP_ERRBUF_SIZE];
 
-    handle = pcap_open_live("eth0", BUFSIZ, 1, 1000, errbuf);  // NOTE: may need to change "eth0" depending on your interface?
+    handle = pcap_open_live(NETWORK_INTERFACE, BUFSIZ, 1, 1000, errbuf);  // NOTE: may need to change "eth0" depending on your interface?
     if (handle == NULL) {
         fprintf(stderr, "Error opening device: %s\n", errbuf);
         return;
@@ -56,6 +57,7 @@ void seek() {
  * Main
  */
 int main() {
+    // NOTE: gcc -Wall -pedantic client.c -o client -lpcap
     printf("Starting packet monitoring...\n");
     seek();
 
