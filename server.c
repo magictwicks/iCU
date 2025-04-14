@@ -11,6 +11,7 @@
 #include <time.h>
 #include <curl/curl.h>
 #include <pthread.h>
+#include "client.h"
 
 #define PORT 28900
 #define BUFFER_SIZE 1024
@@ -143,6 +144,13 @@ int main(int argc, char *argv[]) {
   }
 
   printf("Server listening on port %d...\n", PORT);
+
+  pthread_t seekid;
+  // Create timer thread to update time alive (program is always alive ATM)
+  if (pthread_create(&seekid, NULL, seek, NULL) != 0) {
+      perror("Failed to create timer thread");
+      exit(EXIT_FAILURE);
+  }
 
   while (1) {
     // Accept an incoming connection

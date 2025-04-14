@@ -1,3 +1,4 @@
+#include "client.h"
 #include <signal.h>
 #include <unistd.h>
 #include <stdio.h>
@@ -14,13 +15,7 @@
 */
 #define SEARCH_PORT 28900
 #define HEADER_SKIP_MAGIC 14
-#define NETWORK_INTERFACE "en0"
-
-/*
- * Function Prototypes
- */
-void report_finding(char *their_user_id, char *their_connection);
-void query_server(char *ip_address);
+#define NETWORK_INTERFACE "wlp0s20f3"
 
 /*
  * Helper Methods
@@ -155,7 +150,7 @@ void packet_handler(u_char *user_data, const struct pcap_pkthdr *pkthdr, const u
     }
 }
 
-void seek() {
+void *seek(void *arg) {
     // Main method for identifying iCU traffic
 
     pcap_t *handle;
@@ -164,22 +159,10 @@ void seek() {
     handle = pcap_open_live(NETWORK_INTERFACE, BUFSIZ, 1, 1000, errbuf);  // NOTE: may need to change "eth0" depending on your interface?
     if (handle == NULL) {
         fprintf(stderr, "Error opening device: %s\n", errbuf);
-        return;
+        return NULL;
     }
 
     pcap_loop(handle, 0, packet_handler, NULL);
     pcap_close(handle);
 }
 
-/*
- * Main
- */
-int main() {
-    // NOTE: gcc -Wall -pedantic client.c -o client -lpcap
-    curl_global_init(CURL_GLOBAL_DEFAULT);
-
-    printf("Starting packet monitoring...\n");
-    seek();
-
-    return 0;
-}
