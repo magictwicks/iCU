@@ -1,9 +1,9 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
-LIBS = -lcurl -lpthread
+CFLAGS = -Wall -Wextra -O2 -pedantic
+LIBS = -lcurl -lpthread -lpcap
 
-TARGET = server
-SRC = server.c
+TARGET = icu
+SRC = server.c client.c
 
 all: $(TARGET)
 
@@ -13,3 +13,4 @@ $(TARGET): $(SRC)
 clean:
 	rm -f $(TARGET)
 
+# NOTE: gcc -Wall -pedantic client.c server.c -o icu -lcurl -lpcap
